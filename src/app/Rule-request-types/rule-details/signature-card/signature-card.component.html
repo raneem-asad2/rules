@@ -1,0 +1,80 @@
+@for (sig of signatures; track $index; let i = $index) {
+
+<div
+  cdkDrag
+  class="signature-card mx-5 mb-3 position-relative">
+
+  <div class="signature-strip"></div>
+
+  <div class="card-body py-3 px-4 bg-light rounded mt-4">
+    <div class="d-flex justify-content-between align-items-start">
+
+      <div
+        cdkDragHandle
+        class="drag-handle">
+        <i class="bi bi-grip-vertical"></i>
+        <span class="ms-1">{{ i + 1 }}</span>
+      </div>
+
+      <div class="signature-actions">
+        <button class="btn btn-link p-0 me-3">Edit</button>
+        <button class="btn btn-link p-0 text-danger">Delete</button>
+      </div>
+
+    </div>
+
+    <div class="row mt-3 small text-muted">
+
+      @if (sig.property) {
+        <div class="col-md-6">
+          <strong>Property:</strong> {{ sig.property }}
+        </div>
+      }
+
+      @if (sig.role) {
+        <div class="col-md-6">
+          <strong>Role:</strong> {{ sig.role }}
+        </div>
+      }
+
+      @if (sig.position) {
+        <div class="col-md-6">
+          <strong>Position:</strong> {{ sig.position }}
+        </div>
+      }
+
+      @if (sig.grade) {
+        <div class="col-md-6">
+          <strong>Grade:</strong> {{ sig.grade }}
+        </div>
+      }
+
+      @if (sig.adminUnit) {
+        <div class="col-md-6">
+          <strong>Admin Unit:</strong> {{ sig.adminUnit }}
+        </div>
+      }
+
+      @if (sig.positionState) {
+        <div class="col-md-6">
+          <strong>Admin Unit:</strong> {{ sig.positionState }}
+        </div>
+      }
+
+      @if (sig.recursiveLevels !== null) {
+      <div class="col-md-6">
+        <strong>Recursive Levels:</strong> {{ sig.recursiveLevels }}
+      </div>
+      }
+
+      @if (sig.startRecursiveLevel !== null) {
+        <div class="col-md-6">
+          <strong>Start Recursive Level:</strong> {{ sig.startRecursiveLevel }}
+        </div>
+      }
+
+    </div>
+  </div>
+</div>
+
+}

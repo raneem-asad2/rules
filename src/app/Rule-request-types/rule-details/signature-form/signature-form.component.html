@@ -1,0 +1,106 @@
+<div class="card m-4 p-4">
+    <dx-form
+  [(formData)]="signatureForm"
+  labelLocation="top"
+  [colCountByScreen]="{ lg: 2, md: 2, sm: 1 }">
+
+  <dxi-form-item
+    dataField="signatureNumber"
+    editorType="dxNumberBox"
+    [editorOptions]="{ readOnly: true }">
+  </dxi-form-item>
+
+  <dxi-form-item></dxi-form-item>
+
+  <dxi-form-item
+    dataField="byType"
+    editorType="dxRadioGroup"
+    [editorOptions]="{
+      items: byTypeOptions,
+      layout: 'horizontal',
+      valueExpr: 'value',
+      displayExpr: 'text'
+    }"
+    [colSpan]="2">
+  </dxi-form-item>
+
+  @if (signatureForm.byType === SignatureByType.DESIGNATION) {
+
+  <dxi-form-item
+    dataField="property"
+    editorType="dxSelectBox"
+    [editorOptions]="propertyOption">
+  </dxi-form-item>
+
+  <dxi-form-item
+    dataField="position"
+    editorType="dxSelectBox"
+    [editorOptions]="positionOption">
+  </dxi-form-item>
+
+  <dxi-form-item
+    dataField="numRecursiveLevels"
+    editorType="dxSelectBox"
+    [editorOptions]="numRecursiveLevelsOption">
+  </dxi-form-item>
+
+  <dxi-form-item
+    dataField="startRecursiveLevel"
+    editorType="dxSelectBox"
+    [editorOptions]="startRecursiveLevelOption">
+  </dxi-form-item>
+
+}
+
+
+  @if (signatureForm.byType === SignatureByType.ROLE) {
+
+    <dxi-form-item
+      dataField="property"
+      editorType="dxSelectBox"
+      [editorOptions]="propertyOption">
+    </dxi-form-item>
+
+    <dxi-form-item
+      dataField="role"
+      editorType="dxSelectBox"
+      [editorOptions]="roleOption">
+    </dxi-form-item>
+
+  }
+
+  @if (signatureForm.byType === SignatureByType.ORGANIZATION) {
+
+    <dxi-form-item
+      dataField="adminUnit"
+      editorType="dxSelectBox"
+      [editorOptions]="adminUnitOption">
+    </dxi-form-item>
+
+    <dxi-form-item
+      dataField="property"
+      editorType="dxSelectBox"
+      [editorOptions]="propertyOption">
+    </dxi-form-item>
+
+    <dxi-form-item
+      dataField="position"
+      editorType="dxSelectBox"
+      [editorOptions]="positionOption">
+    </dxi-form-item>
+
+    <dxi-form-item
+      dataField="grade"
+      editorType="dxSelectBox"
+      [editorOptions]="gradeOption">
+    </dxi-form-item>
+
+  }
+
+</dx-form>
+
+<div class="d-flex justify-content-end mt-3">
+  <dx-button text="Add to list" type="default" (onClick)="saveSig()"></dx-button>
+</div>
+
+</div>

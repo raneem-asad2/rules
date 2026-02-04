@@ -1,0 +1,39 @@
+@for (sig of signatures; track sig.signatureNumber) {
+
+  <div class="border rounded ps-3 py-2 mb-2">
+
+    <strong class="me-2">{{ sig.signatureNumber }}.</strong>
+
+    @if (sig.property) {
+      <span class="me-2">Property: <b>{{ sig.property }}</b></span>
+    }
+
+    @if (sig.position) {
+      <span class="me-2">Position: <b>{{ sig.position }}</b></span>
+    }
+
+    @if (sig.positionState) {
+      <span class="me-2">State: <b>{{ sig.positionState }}</b></span>
+    }
+
+    @if (sig.recursiveLevels !== null) {
+      <span class="me-2">Levels: <b>{{ sig.recursiveLevels }}</b></span>
+    }
+
+    @if (sig.startRecursiveLevel !== null) {
+      <span class="me-2">Start Level: <b>{{ sig.startRecursiveLevel }}</b></span>
+    }
+
+    @if (sig.role) {
+      <span class="me-2">Role: <b>{{ sig.role }}</b></span>
+    }
+
+    @if (sig.adminUnit) {
+      <span class="me-2">Admin Unit: <b>{{ sig.adminUnit }}</b></span>
+    }
+    @if (sig.grade) {
+      <span class="me-2">Grade: <b>{{ sig.grade }}</b></span>
+    }
+
+  </div>
+}

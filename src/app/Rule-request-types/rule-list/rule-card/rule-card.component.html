@@ -1,0 +1,61 @@
+<div class="card shadow-sm mb-3">
+  <div class="row g-0 align-items-stretch">
+
+    <!-- LEFT -->
+    <div class="col-12 col-md-4 p-3 border-end">
+
+      <div class="fw-bold text-muted mb-2">
+        Rule {{ rule.ruleNumber }}
+      </div>
+
+      <div class="small text-muted">
+
+        <div *ngIf="rule.adminUnit">
+          Admin Unit: <strong>{{ rule.adminUnit }}</strong>
+        </div>
+
+        <div *ngIf="rule.vacationType">
+          Vacation Type: <strong>{{ rule.vacationType }}</strong>
+        </div>
+
+        <div *ngIf="rule.position">
+          Position: <strong>{{ rule.position }}</strong>
+        </div>
+
+        <div *ngIf="rule.grade">
+          Grade: <strong>{{ rule.grade }}</strong>
+        </div>
+
+        <div *ngIf="rule.role">
+          Role: <strong>{{ rule.role }}</strong>
+        </div>
+
+        <div *ngIf="rule.employeeType">
+          Employee Type: <strong>{{ rule.employeeType }}</strong>
+        </div>
+
+        <div *ngIf="rule.basedOn">
+          Based On: <strong>{{ rule.basedOn }}</strong>
+        </div>
+
+        <div>
+          With Payment:
+          <strong>{{ rule.withPayment ? 'Yes' : 'No' }}</strong>
+        </div>
+
+      </div>
+
+      <app-action-buttons
+        [ruleData]="rule"
+        (delete)="deleteRule($event)"
+        (edit)="editRule($event)">
+      </app-action-buttons>
+
+    </div>
+
+    <div class="col-12 col-md-8 p-3">
+      <app-sig-data [signatures]="getSignaturesForRule()"></app-sig-data>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,112 @@
+<div class="m-4">
+    <app-toolbar 
+    [saveButton]="true"
+    [cancelButton]="true"
+    (save)="saveRule()"
+    ></app-toolbar>
+
+<div class="m-4 p-4"> 
+  
+  <dx-form [formData]="rules"
+   [colCountByScreen]="{ lg: 2, md: 2, sm: 1, xs: 1 }">
+
+  <dxi-form-item
+  dataField="ruleNumber"
+  editorType="dxNumberBox"
+  [editorOptions]="{
+    readOnly: true
+  }">
+</dxi-form-item>
+
+  <dxi-form-item></dxi-form-item>
+  <dxi-form-item itemType="group">
+
+    <dxi-form-item
+      dataField="adminUnit"
+      editorType="dxSelectBox"
+      [editorOptions]="adminUnitOptions">
+    </dxi-form-item>
+
+    <dxi-form-item
+      dataField="vacationType"
+      editorType="dxSelectBox"
+      [editorOptions]="vacationTypeOptions">
+    </dxi-form-item>
+
+    <dxi-form-item
+      dataField="position"
+      editorType="dxSelectBox"
+      [editorOptions]="positionOptions">
+    </dxi-form-item>
+
+    <dxi-form-item
+      dataField="grade"
+      editorType="dxSelectBox"
+      [editorOptions]="gradeOptions">
+    </dxi-form-item>
+
+  </dxi-form-item>
+
+  <dxi-form-item itemType="group">
+
+    <dxi-form-item
+      dataField="role"
+      editorType="dxSelectBox"
+      [editorOptions]="roleOptions">
+    </dxi-form-item>
+
+    <dxi-form-item
+      dataField="employeeType"
+      editorType="dxSelectBox"
+      [editorOptions]="employeeTypeOptions">
+    </dxi-form-item>
+
+    <dxi-form-item
+      dataField="basedOn"
+      editorType="dxSelectBox"
+      [editorOptions]="basedOnSelectOptions">
+    </dxi-form-item>
+
+    <dxi-form-item
+      dataField="withPayment"
+      editorType="dxCheckBox">
+    </dxi-form-item>
+
+  </dxi-form-item>
+
+</dx-form>
+
+
+<ng-template #signatureFormTpl>
+  <app-signature-form
+    (save)="onSignatureSaved($event)">
+  </app-signature-form>
+</ng-template>
+
+
+@if (signatures.length === 0) {
+  <app-signature-form
+    (save)="onSignatureSaved($event)">
+  </app-signature-form>
+}
+
+@if (signatures.length > 0) {
+   <div class="d-flex justify-content-end mx-5 mt-3">
+    <dx-button
+      text="+ Signature"
+      stylingMode="outlined"
+      type="default"
+      (onClick)="openSignaturePopup()">
+    </dx-button>
+  </div>
+  <app-signature-card
+    [signatures]="signatures">
+  </app-signature-card>
+}
+
+<app-signature-popup
+  [(visible)]="showSignaturePopup"
+  (save)="onSignatureSaved($event)">
+</app-signature-popup>
+
+</div>

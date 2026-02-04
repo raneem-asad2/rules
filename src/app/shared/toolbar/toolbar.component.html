@@ -1,0 +1,43 @@
+<dx-toolbar>
+
+  <dxi-toolbar-item location="before">
+    <div *dxTemplate>
+      <h4>Request Type Approval Rules</h4>
+    </div>
+  </dxi-toolbar-item>
+  
+@if (gridButton) {
+    <dxi-toolbar-item location="after" widget="dxButton" [options]="gridButtonOptions"></dxi-toolbar-item>
+  }
+
+  @if (listButton) {
+    <dxi-toolbar-item widget="dxButton" location="after" [options]="listButtonOptions"></dxi-toolbar-item>
+  }
+
+  @if (addButton) {
+    <dxi-toolbar-item widget="dxButton" location="after" [options]="addButtonOptions"></dxi-toolbar-item>
+  }
+
+  @if (moreButton) {
+    <dxi-toolbar-item widget="dxButton" location="after" [options]="moreButtonOptions"></dxi-toolbar-item>
+  }
+
+  @if (searchBox) {
+    <dxi-toolbar-item widget="dxTextBox" location="after" [options]="searchOptions"></dxi-toolbar-item>
+  }
+
+  @if (cancelButton) {
+    <dxi-toolbar-item widget="dxButton" location="after" [options]="cancelButtonOptions"></dxi-toolbar-item>
+  }
+
+  @if (saveButton) {
+    <dxi-toolbar-item widget="dxButton" location="after"[options]="saveButtonOptions"></dxi-toolbar-item>
+  }
+
+</dx-toolbar>
+
+<!-- <div class="alert-warning-custom alert d-flex align-items-center gap-2 small" role="alert">
+  <i class="bi bi-info-circle-fill text-orange"></i>
+  Rules operate sequentially, on first match; other rules will be ignored
+  <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+</div> -->

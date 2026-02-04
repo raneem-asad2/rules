@@ -1,0 +1,19 @@
+<dx-popup
+  [(visible)]="visible"
+  title="Add Signature"
+  [width]="700"
+  [height]="'auto'"
+  [showCloseButton]="true"
+  [dragEnabled]="false"
+  (onHiding)="close()">
+
+  
+
+   <ng-container *ngTemplateOutlet="formTpl"></ng-container>
+</dx-popup>
+
+<ng-template #formTpl>
+  <app-signature-form
+    (save)="onSave($event)">
+  </app-signature-form>
+</ng-template>
