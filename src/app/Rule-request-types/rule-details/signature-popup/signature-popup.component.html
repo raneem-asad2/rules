@@ -5,15 +5,16 @@
   [height]="'auto'"
   [showCloseButton]="true"
   [dragEnabled]="false"
-  (onHiding)="close()">
+  (onHiding)="close()"
+    (onShown)="onShown()">
 
-  
 
-   <ng-container *ngTemplateOutlet="formTpl"></ng-container>
-</dx-popup>
-
-<ng-template #formTpl>
-  <app-signature-form
+    <app-signature-form
+    [showGroupingSwitch]="true"
+    [ruleNumber]="ruleNumber"
+    [signatures]="signatures"
     (save)="onSave($event)">
   </app-signature-form>
-</ng-template>
+
+</dx-popup>
+

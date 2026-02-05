@@ -1,21 +1,31 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DxPopupModule } from 'devextreme-angular';
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { DxPopupModule, DxSwitchComponent } from 'devextreme-angular';
 import { Signature } from '../../../shared/rules.interface';
 import { SignatureFormComponent } from '../signature-form/signature-form.component';
-import { NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-signature-popup',
   standalone: true,
-  imports: [DxPopupModule, SignatureFormComponent, NgTemplateOutlet],
+  imports: [DxPopupModule, NgTemplateOutlet, NgIf, SignatureFormComponent],
   templateUrl: './signature-popup.component.html'
 })
 export class SignaturePopupComponent {
 
-  @Input({ required: true }) visible = false;
+  @Input() visible = false;
+  @Input() contentTemplate!: TemplateRef<any>;
+  @Input() ruleNumber: number | null = null;
+  @Input() signatures: Signature[] = [];
   @Output() visibleChange = new EventEmitter<boolean>();
-
   @Output() save = new EventEmitter<Signature>();
+
+  @ViewChild(SignatureFormComponent)
+form!: SignatureFormComponent;
+
+onShown() {
+  this.form?.refreshNumbers();
+}
+
 
   close() {
     this.visibleChange.emit(false);
@@ -25,4 +35,6 @@ export class SignaturePopupComponent {
     this.save.emit(signature);
     this.close();
   }
+
+
 }

@@ -12,10 +12,10 @@ import { SignaturePopupComponent } from "./signature-popup/signature-popup.compo
   selector: 'app-rule-details',
   standalone: true,
   imports: [DxFormModule,
-    ToolbarComponent,
-    SignatureFormComponent,
-    DxButtonComponent,
-    SignatureCardComponent, SignaturePopupComponent],
+            ToolbarComponent,
+            SignatureFormComponent,
+            DxButtonComponent,
+            SignatureCardComponent, SignaturePopupComponent],
   templateUrl: './rule-details.component.html',
 })
 
@@ -23,6 +23,7 @@ export class RuleDetailsComponent {
 
   signatures :Signature[] = [];
   showSignaturePopup = false;
+
 
   rules: RuleData = {
     ruleNumber: null,
@@ -36,14 +37,6 @@ export class RuleDetailsComponent {
     withPayment: false
   };
 
-  adminUnits = ['Human Resources', 'Finance', 'IT', 'Operations'];
-  vacationTypes = ['Annual', 'Sick', 'Unpaid'];
-  positions = ['Administrative Assistant', 'Manager', 'Analyst'];
-  grades = ['Entry Level', 'Mid Level', 'Senior Level'];
-  roles = ['Employee', 'Manager', 'HR'];
-  employeeTypes = ['Full Time', 'Part Time', 'Contract'];
-  basedOnOptions = ['Days', 'Hours'];
-
   adminUnitOptions!: any;
   vacationTypeOptions!: any;
   positionOptions!: any;
@@ -53,59 +46,63 @@ export class RuleDetailsComponent {
   basedOnSelectOptions!: any;
 
   constructor(
-    private ruleService:RulesService,
+    public ruleService:RulesService,
     private router: Router,
   ) {
     this.initSelectOptions();
   }
 
+  ngOnInit() {
+  this.rules.ruleNumber = this.ruleService.getNextRuleNumber();
+}
+
   initSelectOptions() {
 
     this.adminUnitOptions = {
-      items: this.adminUnits,
+      dataSource:['Human Resources', 'Finance', 'IT', 'Operations'],
       placeholder: 'Select admin unit',
       elementAttr: { style: 'margin-bottom:20px' }
     };
 
     this.vacationTypeOptions = {
-      items: this.vacationTypes,
+      dataSource:['Annual', 'Sick', 'Unpaid'],
       placeholder: 'Select vacation type',
       elementAttr: { style: 'margin-bottom:20px' }
     };
     
 
     this.positionOptions = {
-      items: this.positions,
+      dataSource:['Administrative Assistant', 'Manager', 'Analyst'],
       placeholder: 'Select position',
       elementAttr: { style: 'margin-bottom:20px' }
     };
 
     this.gradeOptions = {
-      items: this.grades,
+      dataSource : ['Entry Level', 'Mid Level', 'Senior Level'],
       placeholder: 'Select grade',
       elementAttr: { style: 'margin-bottom:20px' }
     };
 
     this.roleOptions = {
-      items: this.roles,
+      dataSource: ['Employee', 'Manager', 'HR'],
       placeholder: 'Select role',
       elementAttr: { style: 'margin-bottom:20px' }
     };
 
     this.employeeTypeOptions = {
-      items: this.employeeTypes,
+      dataSource:['Full Time', 'Part Time', 'Contract'],
       placeholder: 'Select employee type',
       elementAttr: { style: 'margin-bottom:20px' }
     };
 
     this.basedOnSelectOptions = {
-      items: this.basedOnOptions,
+      dataSource : ['Days', 'Hours'],
       placeholder: 'Based on',
       elementAttr: { style: 'margin-bottom:20px' }
     };
   }
 
- saveRule() {
+saveRule() {
   const savedRule = this.ruleService.addRule({ ...this.rules });
   this.signatures.forEach(sig => {
     this.ruleService.addSignature({
@@ -123,10 +120,41 @@ openSignaturePopup() {
 }
 
 onSignatureSaved(signature: Signature) {
-  this.signatures.push({
-    ...signature,
-    ruleNumber: this.rules.ruleNumber  
-  });
+  this.signatures.push(signature);
+  console.log('LOCAL signatures:', this.signatures);
 }
 
+get displayedSignatures(): Signature[] {
+  if (this.signatures.length > 0) {
+    return this.signatures;
+  }
+
+  return this.rules.ruleNumber
+    ? this.ruleService.getRuleSignatures(this.rules.ruleNumber)
+    : [];
+}
+
+
+get groupedSignatures(): { number: number; items: Signature[] }[] {
+  const source = this.displayedSignatures;
+
+  const groups: Record<number, Signature[]> = {};
+
+  for (const sig of source) {
+    const key = sig.signatureNumber ?? 0;
+
+    if (!groups[key]) {
+      groups[key] = [];
+    }
+
+    groups[key].push(sig);
+  }
+
+  return Object.keys(groups)
+    .map(n => ({
+      number: Number(n),
+      items: groups[Number(n)]
+    }))
+    .sort((a, b) => a.number - b.number);
+}
 }

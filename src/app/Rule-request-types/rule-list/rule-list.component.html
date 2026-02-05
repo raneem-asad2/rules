@@ -1,9 +1,9 @@
-@if(outlet.isActivated == false){
+@if (!outlet.isActivated) {
 
   <div class="container-fluid my-4">
-    @if (!detailsOpen) {
-      <div class="mb-4">
-        <app-toolbar
+
+    <div class="mb-4">
+      <app-toolbar
         [gridButton]="true"
         [listButton]="true"
         [addButton]="true"
@@ -11,20 +11,13 @@
         [searchBox]="true">
       </app-toolbar>
     </div>
-  }
-  
-  
-  @if (!detailsOpen) {
-  @for (rule of rules; track $index) {
-    <app-rule-card [rule]="rule"></app-rule-card>
-  }
+
+    @for (rule of rules; track $index) {
+      <app-rule-card [rule]="rule"></app-rule-card>
+    }
+
+  </div>
+
 }
 
-</div>
-}
-
-   <router-outlet
-   #outlet="outlet"
-        (activate)="onDetailsActivate()"
-        (deactivate)="onDetailsDeactivate()">
-      </router-outlet>
+<router-outlet #outlet="outlet"></router-outlet>

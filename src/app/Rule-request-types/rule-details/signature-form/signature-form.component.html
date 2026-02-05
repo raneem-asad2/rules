@@ -1,28 +1,50 @@
 <div class="card m-4 p-4">
-    <dx-form
-  [(formData)]="signatureForm"
-  labelLocation="top"
-  [colCountByScreen]="{ lg: 2, md: 2, sm: 1 }">
+  @if (showGroupingSwitch) {
+  <div class="mb-3">
+    <dx-switch
+      [value]="groupWithExisting"
+      (onValueChanged)="setParallel($event.value)">
+    </dx-switch>
+  </div>
+}
 
-  <dxi-form-item
-    dataField="signatureNumber"
-    editorType="dxNumberBox"
-    [editorOptions]="{ readOnly: true }">
-  </dxi-form-item>
 
-  <dxi-form-item></dxi-form-item>
+  <dx-form
+    [(formData)]="signatureForm"
+    labelLocation="top"
+    [colCountByScreen]="{ lg: 2, md: 2, sm: 1 }">
 
-  <dxi-form-item
-    dataField="byType"
-    editorType="dxRadioGroup"
-    [editorOptions]="{
-      items: byTypeOptions,
-      layout: 'horizontal',
-      valueExpr: 'value',
-      displayExpr: 'text'
-    }"
-    [colSpan]="2">
-  </dxi-form-item>
+     @if (!groupWithExisting) {
+    <dxi-form-item
+      dataField="signatureNumber"
+      editorType="dxNumberBox">
+    </dxi-form-item>
+  }
+
+  @if (groupWithExisting) {
+    <dxi-form-item
+      dataField="signatureNumber"
+      editorType="dxSelectBox"
+      [editorOptions]="{
+        items: existingSignatureNumbers,
+        placeholder: 'Select signature group'
+      }">
+    </dxi-form-item>
+  }
+
+    <dxi-form-item></dxi-form-item>
+
+    <dxi-form-item
+      dataField="byType"
+      editorType="dxRadioGroup"
+      [editorOptions]="{
+        items: byTypeOptions,
+        layout: 'horizontal',
+        valueExpr: 'value',
+        displayExpr: 'text'
+      }"
+      [colSpan]="2">
+    </dxi-form-item>
 
   @if (signatureForm.byType === SignatureByType.DESIGNATION) {
 

@@ -16,42 +16,20 @@ import { RulesService } from '../../../shared/rules.service';
 })
 export class RuleCardComponent {
 
-  
-  @Input() rule!:RuleData;
+  @Input() rule!: RuleData;
 
-  constructor(private rulesService :RulesService) {}
+  constructor(private rulesService: RulesService) {}
 
-  getFilledData(data: any[]): any[] {
-    return data.filter(item => item.value);
+  /** expose signatures to template */
+  get ruleSignatures(): Signature[] {
+    return this.rulesService.getRuleSignatures(this.rule.ruleNumber);
   }
 
-
-  ngOnInit() {
-  console.log('RuleCard received rule:', this.rule);
-  }
-
-
-  editRule(rule: any): void {
+  editRule(rule: RuleData): void {
     console.log('Edit rule:', rule);
   }
 
-  deleteRule(rule: any): void {
+  deleteRule(rule: RuleData): void {
     console.log('Delete rule:', rule);
   }
-
-  getSignaturesForRule(): Signature[] {
-  return this.rulesService
-    .getSignatures()
-    .filter(sig => sig.ruleNumber === this.rule.ruleNumber);
-}
-
-
-
-  //   isApplyToAll(rule: any): boolean {
-  //   return rule.isApplyToAll;
-  // }
-
-  //   showRuleDetails(rule: any): void {
-  //   this.currentRule = rule;
-  // }
 }

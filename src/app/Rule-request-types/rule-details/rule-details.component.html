@@ -77,15 +77,10 @@
 </dx-form>
 
 
-<ng-template #signatureFormTpl>
-  <app-signature-form
-    (save)="onSignatureSaved($event)">
-  </app-signature-form>
-</ng-template>
-
-
 @if (signatures.length === 0) {
   <app-signature-form
+    [ruleNumber]="rules.ruleNumber"
+    [signatures]="signatures"
     (save)="onSignatureSaved($event)">
   </app-signature-form>
 }
@@ -99,13 +94,15 @@
       (onClick)="openSignaturePopup()">
     </dx-button>
   </div>
-  <app-signature-card
-    [signatures]="signatures">
+  <app-signature-card 
+  [groupedSignatures]="groupedSignatures" >
   </app-signature-card>
 }
 
 <app-signature-popup
   [(visible)]="showSignaturePopup"
+  [ruleNumber]="rules.ruleNumber"
+  [signatures]="signatures"
   (save)="onSignatureSaved($event)">
 </app-signature-popup>
 

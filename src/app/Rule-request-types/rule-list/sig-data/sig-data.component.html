@@ -1,39 +1,94 @@
-@for (sig of signatures; track sig.signatureNumber) {
+@if (hasParallel) {
+  @for (group of grouped; track group.number) {
 
-  <div class="border rounded ps-3 py-2 mb-2">
+    <div class="border rounded p-2 mb-2 bg-light">
 
-    <strong class="me-2">{{ sig.signatureNumber }}.</strong>
+      @for (sig of group.items; track $index) {
 
-    @if (sig.property) {
-      <span class="me-2">Property: <b>{{ sig.property }}</b></span>
-    }
+        <div class="small py-1">
+          
+        <span class="fw-semibold">{{ group.number }} . </span>
+   
+          @if (sig.adminUnit) {
+            <span>  Admin unit: <b>  {{ sig.adminUnit }}</b>, </span>
+          }
 
-    @if (sig.position) {
-      <span class="me-2">Position: <b>{{ sig.position }}</b></span>
-    }
+          @if (sig.position) {
+            <span>  Position: <b>  {{ sig.position }}</b>, </span>
+          }
 
-    @if (sig.positionState) {
-      <span class="me-2">State: <b>{{ sig.positionState }}</b></span>
-    }
+          @if (sig.grade) {
+            <span>  Grade: <b>  {{ sig.grade }}</b></span>
+          }
 
-    @if (sig.recursiveLevels !== null) {
-      <span class="me-2">Levels: <b>{{ sig.recursiveLevels }}</b></span>
-    }
+          @if (sig.property) {
+            <span>  Property: <b>  {{ sig.property }}</b></span>
+          }
 
-    @if (sig.startRecursiveLevel !== null) {
-      <span class="me-2">Start Level: <b>{{ sig.startRecursiveLevel }}</b></span>
-    }
+          @if (sig.role) {
+            <span>  Role: <b>  {{ sig.role }}</b></span>
+          }
 
-    @if (sig.role) {
-      <span class="me-2">Role: <b>{{ sig.role }}</b></span>
-    }
+          @if (sig.positionState) {
+            <span>  State: <b>  {{ sig.positionState }}</b></span>
+          }
 
-    @if (sig.adminUnit) {
-      <span class="me-2">Admin Unit: <b>{{ sig.adminUnit }}</b></span>
-    }
-    @if (sig.grade) {
-      <span class="me-2">Grade: <b>{{ sig.grade }}</b></span>
-    }
+          @if (sig.recursiveLevels !== null) {
+            <span>  Levels: <b>  {{ sig.recursiveLevels }}</b></span>
+          }
 
-  </div>
+          @if (sig.startRecursiveLevel !== null) {
+            <span>  Start: <b>  {{ sig.startRecursiveLevel }}</b></span>
+          }
+
+        </div>
+
+      }
+
+    </div>
+  }
+}
+
+@else {
+  @for (sig of signatures; track $index) {
+
+    <div class="small border rounded p-2 mb-2 bg-light">
+
+      <span class="fw-semibold">  {{ sig.signatureNumber }} . </span>
+
+      @if (sig.adminUnit) {
+        <span>  Admin unit: <b>  {{ sig.adminUnit }}</b>,</span>
+      }
+
+      @if (sig.position) {
+        <span>  Position: <b>  {{ sig.position }}</b>,</span>
+      }
+
+      @if (sig.grade) {
+        <span>  Grade: <b>  {{ sig.grade }}</b></span>
+      }
+
+      @if (sig.property) {
+        <span>  Property: <b>  {{ sig.property }}</b></span>
+      }
+
+      @if (sig.role) {
+        <span> Role: <b>  {{ sig.role }}</b></span>
+      }
+
+      @if (sig.positionState) {
+        <span>  State: <b>  {{ sig.positionState }}</b></span>
+      }
+
+      @if (sig.recursiveLevels !== null) {
+        <span>  Levels: <b>  {{ sig.recursiveLevels }}</b></span>
+      }
+
+      @if (sig.startRecursiveLevel !== null) {
+        <span>  Start: <b>{{ sig.startRecursiveLevel }}</b></span>
+      }
+
+    </div>
+
+  }
 }

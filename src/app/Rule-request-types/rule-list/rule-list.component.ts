@@ -9,7 +9,11 @@ import { Router, RouterOutlet } from "@angular/router";
 @Component({
   selector: 'app-rules',
   standalone: true,
-  imports: [DxButtonModule, ToolbarComponent, RuleCardComponent, DxDataGridModule, RouterOutlet],
+  imports: [DxButtonModule,
+            ToolbarComponent, 
+            RuleCardComponent,
+            DxDataGridModule, 
+            RouterOutlet],
   templateUrl: './rule-list.component.html',
 })
 export class RuleListComponent {
@@ -21,11 +25,11 @@ export class RuleListComponent {
   detailsOpen = false;
 
   constructor(private rulesService:RulesService,
-     private router: Router
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.rules = this.rulesService.getRules();
+    this.rulesService.rules$.subscribe(rules => {this.rules = rules});
     console.log('Rules in list:', this.rules);
   }
 
@@ -33,17 +37,22 @@ closeDetails() {
   this.router.navigate(['/rules']);
 }
 
-onDetailsActivate() {
+onActivate() {
   this.detailsOpen = true;
 }
 
-onDetailsDeactivate() {
+onDeactivate() {
   this.detailsOpen = false;
   this.rules = this.rulesService.getRules();
-  this.signatures = this.rulesService.getSignatures();
-  console.log('rules from the rule details page ' , this.rules);
+  
+  this.signatures = this.rules.length > 0 
+    ? this.rulesService.getRuleSignatures(this.rules[1].ruleNumber) 
+    : [];
+
+  console.log('rules from the rule details page' , this.rules);
   console.log('signatures from the rule details page ' , this.signatures);
 }
+
   openDetails() {
   this.router.navigate(['rules/details']);
 }

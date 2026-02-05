@@ -9,9 +9,6 @@ export interface RuleData {
     basedOn: string | null;
     withPayment: boolean;
 }
-
-
-
 export interface Signature{
 
     signatureNumber :number | null;
@@ -25,7 +22,6 @@ export interface Signature{
     position: string | null;
     adminUnit: string | null;
 }
-
 export interface Rule {
     ruleData: RuleData;
     signatures: Signature[];
