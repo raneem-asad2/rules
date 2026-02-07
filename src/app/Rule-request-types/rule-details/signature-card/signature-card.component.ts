@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Signature } from '../../../shared/rules.interface';
 import { RulesService } from '../../../shared/rules.service';
@@ -13,14 +13,15 @@ import {  Router } from '@angular/router';
 })
 export class SignatureCardComponent {
 
+  @Output() edit = new EventEmitter<Signature>();
+  @Output() delete = new EventEmitter<Signature>();
+
+
   @Input() groupedSignatures: { number: number; items: Signature[] }[] = [];
   @Input() signatures: Signature[] | null = null;
 
-  
-constructor(private ruleService:RulesService,
-  private router: Router,
-) { }
+  private dragIndex: number | null = null;
 
-
+  constructor(private ruleService: RulesService) {}
 
 }

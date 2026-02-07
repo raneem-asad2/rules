@@ -13,7 +13,10 @@
     </div>
 
     @for (rule of rules; track $index) {
-      <app-rule-card [rule]="rule"></app-rule-card>
+      <app-rule-card [rule]="rule"
+      (view)="viewRule($event)"
+    (edit)="editRule($event)"
+    (delete)="deleteRule($event)"></app-rule-card>
     }
 
   </div>

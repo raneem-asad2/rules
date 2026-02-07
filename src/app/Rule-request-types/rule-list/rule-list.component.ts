@@ -4,7 +4,7 @@ import { ToolbarComponent } from "../../shared/toolbar/toolbar.component";
 import { RuleCardComponent } from "./rule-card/rule-card.component";
 import { RulesService } from '../../shared/rules.service';
 import { Rule, RuleData, Signature } from "../../shared/rules.interface";
-import { Router, RouterOutlet } from "@angular/router";
+import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
 
 @Component({
   selector: 'app-rules',
@@ -24,9 +24,12 @@ export class RuleListComponent {
   rule : Rule[] =[];
   detailsOpen = false;
 
-  constructor(private rulesService:RulesService,
-    private router: Router
-  ) { }
+  constructor(
+  private rulesService: RulesService,
+  private router: Router,
+  private route: ActivatedRoute
+) {}
+
 
   ngOnInit() {
     this.rulesService.rules$.subscribe(rules => {this.rules = rules});
@@ -53,7 +56,23 @@ onDeactivate() {
   console.log('signatures from the rule details page ' , this.signatures);
 }
 
-  openDetails() {
-  this.router.navigate(['rules/details']);
+//   openDetails() {
+//   this.router.navigate(['rules/details']);
+// }
+
+addRule() {
+  this.router.navigate(['details'], { relativeTo: this.route });
+}
+
+editRule(id: number) {
+  this.router.navigate(['details', id], { relativeTo: this.route });
+}
+
+viewRule(id: number) {
+  this.router.navigate(['details', id, 'view'], { relativeTo: this.route });
+}
+
+deleteRule(id: number) {
+  this.rulesService.deleteRule(id);
 }
 }

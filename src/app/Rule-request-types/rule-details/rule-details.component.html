@@ -1,13 +1,13 @@
 <div class="m-4">
     <app-toolbar 
-    [saveButton]="true"
+    [saveButton]="mode !== RulePageMode.VIEW"
     [cancelButton]="true"
     (save)="saveRule()"
     ></app-toolbar>
 
 <div class="m-4 p-4"> 
   
-  <dx-form [formData]="rules"
+  <dx-form [formData]="rules" [readOnly]="mode === RulePageMode.VIEW"
    [colCountByScreen]="{ lg: 2, md: 2, sm: 1, xs: 1 }">
 
   <dxi-form-item
@@ -95,7 +95,10 @@
     </dx-button>
   </div>
   <app-signature-card 
-  [groupedSignatures]="groupedSignatures" >
+  [groupedSignatures]="groupedSignatures"
+  [signatures]="signatures"
+  (edit)="openSignaturePopup($event)"
+  (delete)="deleteSignature($event)">
   </app-signature-card>
 }
 
@@ -103,6 +106,7 @@
   [(visible)]="showSignaturePopup"
   [ruleNumber]="rules.ruleNumber"
   [signatures]="signatures"
+  [editingSignature]="editingSignature"
   (save)="onSignatureSaved($event)">
 </app-signature-popup>
 

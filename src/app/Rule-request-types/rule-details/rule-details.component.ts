@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { DxFormModule, DxButtonComponent } from 'devextreme-angular';
 import { ToolbarComponent } from "../../shared/toolbar/toolbar.component";
 import { RulesService } from '../../shared/rules.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RuleData, Signature } from '../../shared/rules.interface';
 import { SignatureFormComponent } from "./signature-form/signature-form.component";
 import { SignatureCardComponent } from "./signature-card/signature-card.component";
 import { SignaturePopupComponent } from "./signature-popup/signature-popup.component";
+import { RulePageMode } from '../../shared/enum/rule-page-mode.enum';
 
 @Component({
   selector: 'app-rule-details',
@@ -21,9 +22,16 @@ import { SignaturePopupComponent } from "./signature-popup/signature-popup.compo
 
 export class RuleDetailsComponent {
 
+  mode: RulePageMode = RulePageMode.ADD;
+  RulePageMode = RulePageMode;
+
+
+  editingSignature: Signature | null = null;
+
   signatures :Signature[] = [];
   showSignaturePopup = false;
 
+  
 
   rules: RuleData = {
     ruleNumber: null,
@@ -48,12 +56,35 @@ export class RuleDetailsComponent {
   constructor(
     public ruleService:RulesService,
     private router: Router,
+    private route: ActivatedRoute
   ) {
     this.initSelectOptions();
   }
 
   ngOnInit() {
   this.rules.ruleNumber = this.ruleService.getNextRuleNumber();
+
+  const id = this.route.snapshot.paramMap.get('id');
+
+  // ADD
+  if (!id) {
+    this.mode = RulePageMode.ADD;
+    this.rules.ruleNumber = this.ruleService.getNextRuleNumber();
+    return;
+  }
+
+  const ruleNumber = Number(id);
+
+  // VIEW or EDIT
+  if (this.route.snapshot.url.some(s => s.path === 'view')) {
+    this.mode = RulePageMode.VIEW;
+  } else {
+    this.mode = RulePageMode.EDIT;
+  }
+
+  const payload = this.ruleService.buildRulePayload(ruleNumber);
+  this.rules = payload.ruleData;
+  this.signatures = payload.signatures;
 }
 
   initSelectOptions() {
@@ -103,35 +134,65 @@ export class RuleDetailsComponent {
   }
 
 saveRule() {
-  const savedRule = this.ruleService.addRule({ ...this.rules });
-  this.signatures.forEach(sig => {
-    this.ruleService.addSignature({
-      ...sig,
-      ruleNumber: savedRule.ruleNumber
-    });
-  });
+
+  if (this.mode === RulePageMode.VIEW) return;
+
+
+  if (this.mode === RulePageMode.ADD) {
+    const savedRule = this.ruleService.addRule({ ...this.rules });
+
+    this.signatures.forEach(sig =>
+      this.ruleService.addSignature({
+        ...sig,
+        ruleNumber: savedRule.ruleNumber
+      })
+    );
+  }
+
+
+  if (this.mode === RulePageMode.EDIT) {
+
+    this.ruleService.deleteRule(this.rules.ruleNumber);
+
+    const savedRule = this.ruleService.addRule({ ...this.rules });
+
+    this.signatures.forEach(sig =>
+      this.ruleService.addSignature({
+        ...sig,
+        ruleNumber: savedRule.ruleNumber
+      })
+    );
+  }
 
   this.router.navigate(['/rules']);
 }
 
 
-openSignaturePopup() {
+openSignaturePopup(signature?: Signature) {
+  this.editingSignature = signature ?? null;
   this.showSignaturePopup = true;
 }
 
-onSignatureSaved(signature: Signature) {
-  this.signatures.push(signature);
-  console.log('LOCAL signatures:', this.signatures);
-}
 
-get displayedSignatures(): Signature[] {
-  if (this.signatures.length > 0) {
-    return this.signatures;
+onSignatureSaved(signature: Signature) {
+
+  if (this.editingSignature) {
+    // EDIT
+    this.ruleService.updateSignature(signature);
+    this.editingSignature = null;
+
+  } else {
+    // ADD  ← 🔥 MUST go through service
+    this.ruleService.addSignature(signature);
   }
 
-  return this.rules.ruleNumber
-    ? this.ruleService.getRuleSignatures(this.rules.ruleNumber)
-    : [];
+  // always reload from service
+  this.signatures = this.ruleService.getRuleSignatures(this.rules.ruleNumber);
+}
+
+
+get displayedSignatures(): Signature[] {
+  return this.signatures;
 }
 
 
@@ -157,4 +218,10 @@ get groupedSignatures(): { number: number; items: Signature[] }[] {
     }))
     .sort((a, b) => a.number - b.number);
 }
+
+deleteSignature(signature: Signature) {
+  this.ruleService.deleteSignature(signature);
+  this.signatures = this.ruleService.getRuleSignatures(this.rules.ruleNumber);
+}
+
 }

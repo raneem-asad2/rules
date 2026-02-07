@@ -9,8 +9,8 @@ export class RulesService {
   private SIGNATURES_KEY = 'signatures';
 
 
-private rulesSubject = new BehaviorSubject<RuleData[]>(this.loadRules());
-rules$ = this.rulesSubject.asObservable();
+  private rulesSubject = new BehaviorSubject<RuleData[]>(this.loadRules());
+  rules$ = this.rulesSubject.asObservable();
 
   private loadRules(): RuleData[] {
     return JSON.parse(localStorage.getItem(this.RULES_KEY) || '[]');
@@ -53,21 +53,25 @@ rules$ = this.rulesSubject.asObservable();
   }
 
   addSignature(signature: Signature): Signature {
-    const signatures = this.loadSignatures();
+  const signatures = this.loadSignatures();
 
-    if (!signature.signatureNumber) {
-      const nums = signatures
-        .filter(s => s.ruleNumber === signature.ruleNumber)
-        .map(s => s.signatureNumber!);
-
-      signature.signatureNumber = nums.length ? Math.max(...nums) + 1 : 1;
-    }
-
-    signatures.push(signature);
-    this.saveSignatures(signatures);
-
-    return signature;
+  if (!signature.id) {
+    signature.id = crypto.randomUUID(); // ⭐ unique id
   }
+
+  if (!signature.signatureNumber) {
+    const nums = signatures
+      .filter(s => s.ruleNumber === signature.ruleNumber)
+      .map(s => s.signatureNumber!);
+
+    signature.signatureNumber = nums.length ? Math.max(...nums) + 1 : 1;
+  }
+
+  signatures.push(signature);
+  this.saveSignatures(signatures);
+
+  return signature;
+}
 
   getRuleSignatures(ruleNumber: number | null): Signature[] {
     if (!ruleNumber) return [];
@@ -83,6 +87,75 @@ rules$ = this.rulesSubject.asObservable();
     .filter((n, i, arr) => arr.indexOf(n) === i); // unique
 
   return nums.sort((a, b) => a - b);
+}
+
+
+deleteRule(ruleNumber: number | null) {
+  if (!ruleNumber) return;
+
+  const rules = this.loadRules().filter(r => r.ruleNumber !== ruleNumber);
+  this.saveRules(rules);
+  this.rulesSubject.next(rules);
+
+  // also remove its signatures
+  const signatures = this.loadSignatures().filter(s => s.ruleNumber !== ruleNumber);
+  this.saveSignatures(signatures);
+}
+
+deleteSignature(signature: Signature) {
+  const signatures = this.loadSignatures();
+
+  const index = signatures.findIndex(s => s.id === signature.id);
+
+  if (index === -1) return;
+
+  const ruleNumber = signatures[index].ruleNumber;
+
+  signatures.splice(index, 1);
+
+  this.saveSignatures(signatures);
+
+  if (ruleNumber) {
+    this.renumberRuleSignatures(ruleNumber);
+  }
+}
+reorderSignatureGroups(ruleNumber: number, newOrder: number[]) {
+  const signatures = this.loadSignatures();
+
+  const updated = signatures.map(sig => {
+    if (sig.ruleNumber !== ruleNumber) return sig;
+
+    const index = newOrder.indexOf(sig.signatureNumber!);
+    return index === -1 ? sig : { ...sig, signatureNumber: index + 1 };
+  });
+
+  this.saveSignatures(updated);
+}
+
+updateSignature(updated: Signature) {
+  const signatures = this.loadSignatures().map(sig =>
+    sig.id === updated.id ? updated : sig
+  );
+
+  this.saveSignatures(signatures);
+
+  if (updated.ruleNumber) {
+    this.renumberRuleSignatures(updated.ruleNumber);
+  }
+}
+
+private renumberRuleSignatures(ruleNumber: number) {
+  const signatures = this.loadSignatures();
+
+  const ruleSigs = signatures
+    .filter(s => s.ruleNumber === ruleNumber)
+    .sort((a, b) => (a.signatureNumber ?? 0) - (b.signatureNumber ?? 0));
+
+  ruleSigs.forEach((sig, index) => {
+    sig.signatureNumber = index + 1;
+  });
+
+  this.saveSignatures(signatures);
 }
 
 

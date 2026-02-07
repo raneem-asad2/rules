@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { DxBoxModule, DxCardViewComponent } from "devextreme-angular";
 import { SigDataComponent } from "../sig-data/sig-data.component";
 import { ActionButtonsComponent } from '../../../shared/action-buttons/action-buttons.component';
@@ -17,6 +17,9 @@ import { RulesService } from '../../../shared/rules.service';
 export class RuleCardComponent {
 
   @Input() rule!: RuleData;
+@Output() edit = new EventEmitter<number>();
+@Output() view = new EventEmitter<number>();
+@Output() delete = new EventEmitter<number>();
 
   constructor(private rulesService: RulesService) {}
 
@@ -25,11 +28,14 @@ export class RuleCardComponent {
     return this.rulesService.getRuleSignatures(this.rule.ruleNumber);
   }
 
-  editRule(rule: RuleData): void {
-    console.log('Edit rule:', rule);
-  }
-
-  deleteRule(rule: RuleData): void {
-    console.log('Delete rule:', rule);
-  }
+viewRule(id: number) {
+  this.view.emit(id);
 }
+
+editRule(id: number) {
+  this.edit.emit(id);
+}
+
+deleteRule(id: number) {
+  this.delete.emit(id);
+}}

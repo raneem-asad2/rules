@@ -10,6 +10,7 @@ export interface RuleData {
     withPayment: boolean;
 }
 export interface Signature{
+    id: string; 
 
     signatureNumber :number | null;
     property: string | null;

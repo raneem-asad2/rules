@@ -1,4 +1,4 @@
-@if (groupedSignatures?.length) {
+@if (groupedSignatures.length) {
 
   @for (group of groupedSignatures; track group.number) {
 
@@ -62,8 +62,8 @@
               }
 
               <div class="small mt-1">
-                <a class="text-warning me-2">Edit</a>
-                <a class="text-danger">Delete</a>
+                <a class="text-warning me-2" (click)="edit.emit(sig)">Edit</a>
+                <a class="text-danger" (click)="delete.emit(sig)">Delete</a>
               </div>
 
             </div>

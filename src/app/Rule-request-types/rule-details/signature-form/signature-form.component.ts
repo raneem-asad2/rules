@@ -91,18 +91,31 @@ setParallel(value: boolean) {
   positionOption = { dataSource: ['Active', 'Temporary', 'Delegated'] };
   gradeOption = { dataSource:['Entry Level', 'Mid Level', 'Senior Level'] };
 
-  signatureForm = {
-    signatureNumber: 1,
-    byType: SignatureByType.DESIGNATION,
-    property: null,
-    position: null,
-    state: null,
-    role: null,
-    adminUnit: null,
-    grade: null,
-    numRecursiveLevels: null,
-    startRecursiveLevel: null
-  };
+ signatureForm: {
+  id?: string;
+  signatureNumber: number;
+  byType: SignatureByType;
+  property: string | null;
+  position: string | null;
+  state: string | null;
+  role: string | null;
+  adminUnit: string | null;
+  grade: string | null;
+  numRecursiveLevels: number | null;
+  startRecursiveLevel: number | null;
+} = {
+  signatureNumber: 1,
+  byType: SignatureByType.DESIGNATION,
+  property: null,
+  position: null,
+  state: null,
+  role: null,
+  adminUnit: null,
+  grade: null,
+  numRecursiveLevels: null,
+  startRecursiveLevel: null
+};
+
 
   byTypeOptions = [
     { text: 'Designation', value: SignatureByType.DESIGNATION },
@@ -112,17 +125,19 @@ setParallel(value: boolean) {
 
   private buildData(formValue: any): Signature {
     const base: Signature = {
-      signatureNumber: formValue.signatureNumber,
-      ruleNumber: this.ruleNumber,
-      property: null,
-      role: null,
-      positionState: null,
-      recursiveLevels: null,
-      startRecursiveLevel: null,
-      grade: null,
-      position: null,
-      adminUnit: null
-    };
+  id: formValue.id,
+  signatureNumber: formValue.signatureNumber,
+  ruleNumber: this.ruleNumber,
+  property: null,
+  role: null,
+  positionState: null,
+  recursiveLevels: null,
+  startRecursiveLevel: null,
+  grade: null,
+  position: null,
+  adminUnit: null
+};
+
 
     switch (formValue.byType) {
       case SignatureByType.DESIGNATION:

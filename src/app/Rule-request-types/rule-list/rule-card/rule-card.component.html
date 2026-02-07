@@ -47,6 +47,7 @@
 
       <app-action-buttons
         [ruleData]="rule"
+        (view)="viewRule($event)"
         (delete)="deleteRule($event)"
         (edit)="editRule($event)">
       </app-action-buttons>
